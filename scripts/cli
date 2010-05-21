@@ -399,6 +399,9 @@ __rvm_parse_args() {
 }
 
 rvm() {
+  # Set clobber for zsh users, for compatibility with bash's append operator ( >> file ) behavior
+  if [[ -z "$ZSH_VERSION" ]] ; then __rvm_zsh_set_clobber; fi
+
   if [[ ! -z "$PS1" ]] ; then export rvm_interactive=1 ; else unset rvm_interactive ; fi
 
   if [[ -z "$ZSH_VERSION" ]] ; then
@@ -534,6 +537,9 @@ rvm() {
   if [[ ! -z "$rvm_reload_flag" ]] ; then source "$rvm_scripts_path/rvm" ; fi
 
   if [[ ! -z "$rvm_trace_flag" ]] ; then set +x ; unset rvm_trace_flag ; fi
+
+  # Reset clobber option to previous value
+  if [[ -z "$ZSH_VERSION" ]] ; then __rvm_zsh_reset_clobber; fi
 
   return $result
 }
